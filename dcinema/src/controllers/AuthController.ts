@@ -150,4 +150,49 @@ export class AuthController {
       message: 'Logout successful'
     };
   }
+
+  // Simple forgot password: verify email exists and respond (we'll allow direct reset)
+  static async forgotPassword(email: string): Promise<{ success: boolean; message: string }> {
+    try {
+      if (!email) return { success: false, message: 'Email is required' };
+
+      const user = await User.findByEmail(email);
+      if (!user) {
+        // Now return failure to inform user that email doesn't exist
+        return { success: false, message: 'Email không tồn tại' };
+      }
+
+      // In a real app we'd email a link. Here we simply acknowledge the request and allow reset page.
+      return { success: true, message: 'Email xác nhận, bạn có thể nhập mật khẩu mới' };
+    } catch (error) {
+      return { success: false, message: error instanceof Error ? error.message : 'Failed to process request' };
+    }
+  }
+
+  // Reset password directly by email (no token) — user supplies email and new password
+  static async resetPassword(email: string, newPassword: string): Promise<IAuthResponse> {
+    try {
+      if (!email || !newPassword) {
+        return { success: false, message: 'Email and new password are required' };
+      }
+
+      const user = await User.findByEmail(email);
+      if (!user) {
+        return { success: false, message: 'No account with that email' };
+      }
+
+      if (newPassword.length < 6) {
+        return { success: false, message: 'Password must be at least 6 characters long' };
+      }
+
+      const updated = await User.updatePasswordByEmail(email, newPassword);
+      if (!updated) {
+        return { success: false, message: 'Failed to update password' };
+      }
+
+      return { success: true, message: 'Password updated successfully' };
+    } catch (error) {
+      return { success: false, message: error instanceof Error ? error.message : 'Failed to reset password' };
+    }
+  }
 }

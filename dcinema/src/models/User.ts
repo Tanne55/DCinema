@@ -116,4 +116,12 @@ export class User {
     const users = stmt.all() as IUser[];
     return users.map(user => this.toJSON(user));
   }
+
+  // Update password by email (hashes password)
+  static async updatePasswordByEmail(email: string, newPassword: string): Promise<boolean> {
+    const hashed = await bcrypt.hash(newPassword, 12);
+    const stmt = db.prepare("UPDATE users SET password = ?, updated_at = datetime('now') WHERE email = ?");
+    const result = stmt.run(hashed, email);
+    return result.changes > 0;
+  }
 }

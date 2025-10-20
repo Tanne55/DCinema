@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 interface RegisterFormProps {
   onSubmit: (data: { name: string; email: string; password: string }) => void;
@@ -171,6 +172,13 @@ export default function RegisterForm({ onSubmit, loading = false, error }: Regis
             >
               {loading ? 'Đang tạo tài khoản...' : 'Đăng ký'}
             </button>
+          </div>
+
+          <div className="flex justify-center items-center mt-4 text-sm">
+            <div>
+              <span>Đã có tài khoản? </span>
+              <Link href="/login" className="text-indigo-600 hover:text-indigo-800">Đăng nhập</Link>
+            </div>
           </div>
         </form>
       </div>

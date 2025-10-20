@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 interface LoginFormProps {
   onSubmit: (data: { email: string; password: string }) => void;
@@ -89,6 +90,15 @@ export default function LoginForm({ onSubmit, loading = false, error }: LoginFor
             >
               {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
             </button>
+          </div>
+
+          <div className="flex justify-between items-center mt-4 text-sm">
+            <div>
+              <Link href="/forgot" className="text-indigo-600 hover:text-indigo-800">Quên mật khẩu?</Link>
+            </div>
+            <div>
+              <Link href="/register" className="text-indigo-600 hover:text-indigo-800">Tạo tài khoản</Link>
+            </div>
           </div>
         </form>
       </div>
